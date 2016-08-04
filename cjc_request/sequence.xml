@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="ir.sequence.type" id="seq_type_cjc_request">
+            <field name="name">Secuencias Caja Chica</field>
+            <field name="code">cjc_request.cjc_request</field>
+        </record>
+
+        <record model="ir.sequence" id="seq_cjc_request">
+            <field name="name">Secuencias Caja Chica</field>
+            <field name="code">cjc_request.cjc_request</field>
+            <field name="prefix">CJC/%(year)s/</field>
+            <field name="padding">10</field>
+            <field name="implementation">no_gap</field>
+        </record>
+
+    </data>
+</openerp>

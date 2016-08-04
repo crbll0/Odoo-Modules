@@ -1,0 +1,115 @@
+<openerp>
+  <data>
+
+    <!--List View-->
+    <record model="ir.ui.view" id="viatico_categ_list_view">
+      <field name="name">viatico_categ_list_view</field>
+      <field name="model">viatico.categoria</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <tree string="Viatico/Categoria">
+          <field name="name"/>
+          <field name="escala_id"/>
+          <field name="zona_id"/>
+        </tree>
+      </field>
+    </record>
+
+
+    <!--Form View -->
+    <record model="ir.ui.view" id="viatico_categ_form_view">
+    <field name="name">Viaticos Categ Form View</field>
+    <field name="model">viatico.categoria</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+      <form>
+
+        <sheet>
+          <!--Nombre de la Categoria en Grande-->
+          <div style="color:#7c7bad;">
+            <label string="Nombre de la Categoria" class="oe_edit_only" />
+            <h1>
+              <field name="name" required="1"/>
+            </h1>
+          </div>
+
+          <!--Seleccion de Escala y Zonas-->
+          <div>
+            <group>
+
+              <p class="oe_edit_only text-center" colspan="4" attrs="{'invisible': [('zona_id', '!=', False)]}">
+                Selecciona la Escala a donde tendra efecto esta Categoria.
+              </p>
+              <p class="oe_edit_only text-center" colspan="4" attrs="{'invisible': [('zona_id', '=', False)]}">
+                Selecciona la Zona a donde tendra efecto esta Categoria.
+              </p>
+
+              <group>
+                <div>
+                  <label for="escala_id" string="Escala" />
+                  <field name="escala_id" required="1"/>
+                </div>
+              </group>
+              <group>
+                <div attrs="{'invisible': [('escala_id', '=', False)]}">
+                  <label for="zona_id" string="Zona"/>
+                  <field name="zona_id" required="1"/>
+                </div>
+              </group>
+            </group>
+
+            <!--Lista de Puestos de Trabajos-->
+            <div>
+              <label for="puesto_trabajo" string="Puestos de trabajos a los que se le aplicara la categoria" />
+              <field name="puesto_trabajo"  required="1">
+                <tree>
+                  <field name="name" required="1"/>
+                </tree>
+              </field>
+            </div>
+
+          </div>
+        </sheet>
+      </form>
+    </field>
+    </record>
+
+    <record id="search_view_viatico_categoria" model="ir.ui.view">
+    <field name="name">Search Categorias Viaticos</field>
+    <field name="model">viatico.categoria</field>
+    <field name="arch" type="xml">
+        <search string="Filtos">
+
+            <group string="Agrupar por">
+
+                <filter string="Escalas"
+                        context="{'group_by': 'escala_id'}"/>
+
+                <filter string="Zonas"
+                        context="{'group_by': 'zona_id'}"/>
+
+            </group>
+
+        </search>
+    </field>
+    </record>
+
+
+
+    <menuitem id="submenu_viaticos" parent="account.menu_finance_configuration" name="Viaticos" sequence="15" action=""/>
+
+    <record model="ir.actions.act_window" id="viatico_categoria_view">
+      <field name="name">Viaticos/Categ.</field>
+      <field name="res_model">viatico.categoria</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Categoria"
+              action="viatico_categoria_view"
+              id="menu_de_viaticos"
+              sequence="20"
+              parent="submenu_viaticos"/>
+
+  </data>
+</openerp>

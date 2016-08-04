@@ -1,0 +1,19 @@
+<openerp>
+    <data>
+
+		<record id="voucher_line_ext" model="ir.ui.view">
+            <field name="name">voucher.line.ext</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_vendor_receipt_form"/>
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='line_cr_ids']//field[@name='account_id']" position="after">
+					<field name="account_analytic_id" string="Cuenta Analitica" required="1"/>
+				</xpath>
+				<xpath expr="//field[@name='line_dr_ids']//field[@name='account_id']" position="after">
+					<field name="account_analytic_id" string="Cuenta Analitica" required="1"/>
+				</xpath>
+			</field>
+        </record>
+
+    </data>
+</openerp>

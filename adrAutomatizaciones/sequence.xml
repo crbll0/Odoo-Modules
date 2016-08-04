@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="ir.sequence.type" id="seq_type_deposit_tickets">
+            <field name="name">Secuencias Deposito</field>
+            <field name="code">deposit.ticket</field>
+        </record>
+
+        <record model="ir.sequence" id="seq_deposit_tickets">
+            <field name="name">Secuencias Deposito</field>
+            <field name="code">deposit.ticket</field>
+            <field name="prefix">DP/%(year)s/</field>
+            <field name="padding">10</field>
+            <field name="implementation">no_gap</field>
+        </record>
+
+    </data>
+</openerp>

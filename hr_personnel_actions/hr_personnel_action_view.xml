@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!-- Record for HR.Employee -->
+    <record model="ir.ui.view" id="hr_employee_form_inherit">
+        <field name="name">hr.employee.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='job_id']" position="after">
+
+                <field name="on_vacation"/>
+                <field name="on_licence"/>
+                <field name="transfer_to"/>
+                <!--group col="2"-->
+                    <field name="proposed_misconduct"/>
+                    <field name="proposed_misconduct_level"/>
+                <!--/group-->
+            </xpath>
+        </field>
+    </record>
+
+
+   <!-- Form and Tree View foe HR.Personnel.Action.
+   This the creator, all inherences must be from here -->
+    <record model="ir.ui.view" id="hr_personnel_action_form_view">
+        <field name="name">Personnel actions form</field>
+        <field name="model">hr.personnel.action</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Personnel Action" version="7.0">
+                <header>
+                    <button string="Cancel" name="button_cancel"
+                            type="workflow" icon="gtk-close"
+                            attrs="{'invisible':[('states','in',['cancelled','applied'])]}"/>
+                    <button string="Draft" name="button_draft"
+                            type="workflow"
+                            invisible="1"/>
+                    <button string="Confirm" name="button_confirm"
+                            type="workflow"
+                            attrs="{'invisible':[('states','not in',['draft'])]}"
+                            groups="__export__.res_groups_501"/>
+                    <button string="Aprobacion G.H" name="button_aprobacion_gh"
+                            type="workflow"
+                            attrs="{'invisible':['|','|',('states','not in',['confirmed']),('stage','in',['confirmed2']),('aprobadogh_por','=',True)]}"
+                            groups="__export__.res_groups_314"/>
+                    <button string="Aprobacion D.G.H" name="aprobacion_dgh"
+                            type="object"
+                            attrs="{'invisible':[('stage','not in',['confirmed2'])]}"
+                            groups="__export__.res_groups_308"/>
+                    <button string="Aprobacion D.E" name="button_aprobacion_de"
+                            type="workflow"
+                            attrs="{'invisible':['|',('stage','not in',['approved']),
+                                                     ('stage','=','listo')]}"
+                            groups="__export__.res_groups_410"/>
+
+                    <button string="Apply" name="button_listo"
+                            type="object" invisible="1" />
+
+                    <field name="states" widget="statusbar"
+                           statusbar_visible="draft, confirmed, approved, aprobacion_de"/>
+
+                    <field name="stage" widget="statusbar"
+                           statusbar_visible="draft, confirmed, approved, aprobacion_de"/>
+                </header>
+                    <sheet>
+                         <div class="oe_title" style="color:#7C7BAD;">
+                            <h1>
+                                <label for="referencia" class="oe_edit_only" />
+                            </h1>
+                            <h1>
+                                <field name="referencia" attrs="{'readonly':'1'}" />
+                            </h1>
+                         </div>
+                        <group colspan="4">
+
+                            <group string="Petitioner">
+                                <field name="origin_employee_id" on_change="onchange_petitioner(origin_employee_id, context)" />
+                                <field name="origin_department_id" required="1" string="Departamento/Solicitante"/>
+                                <field name="origin_company_id"  />
+                                <field name="origin_address"  />
+                                <field name="origin_state_id"  />
+                            </group>
+
+                            <group string="Petitionee">
+                                <field name="employee_id" on_change="onchange_empleado(employee_id, context)"/>
+
+                                <field name="action_requested" on_change="onchange_action_requested(action_requested, context)"/>
+
+                                <field name="action_designation_requested"
+                                       attrs="{'invisible': [('action_requested', '!=', 'designacion')],
+                                       'required':[('action_requested', '=', 'designacion')]}"
+                                        on_change="onchange_option(action_requested,action_designation_requested, employee_id)"/>
+
+                                <field name="action_changes_requested"
+                                       attrs="{'invisible': [('action_requested', '!=', 'cambios')],
+                                       'required':[('action_requested', '=', 'cambios')]}"
+                                        on_change="onchange_option(action_requested,action_changes_requested, employee_id)"/>
+
+                                <field name="action_out_requested"
+                                       attrs="{'invisible': [('action_requested', '!=', 'salidas')],
+                                       'required':[('action_requested', '=', 'salidas')]}"
+                                        on_change="onchange_option(action_requested,action_out_requested, employee_id, effective_date)"/>
+
+                                <field name="action_others_requested"
+                                       attrs="{'invisible': [('action_requested', '!=', 'vacation_and_licenses')],
+                                       'required':[('action_requested', '=', 'vacation_and_licenses')]}"
+                                        on_change="onchange_option(action_requested,action_others_requested, employee_id,)"/>
+
+                                <field name="effective_date"
+                                       on_change="num_days(effective_date, days_of_vacations)" />
+                                <field name="actual_employee_code"/>
+                                <field name="actual_identification_id" />
+                                <field name="peticion_ausencia" attrs="{'invisible': '1'}" />
+                            </group>
+                            <group string="Actual situation">
+                                <field name="actual_dependency" string="Departamento/Empleado" attrs="{'readonly':'1'}" />
+                                <field name="actual_ocupation" attrs="{'readonly':'1'}" />
+
+                                <field name="actual_parent_id" attrs="{'readonly':'1'}"/>
+
+                                <field name="actual_orderly_turn" attrs="{'readonly':'1'}"/>
+                                <field name="actual_wage" attrs="{'readonly':'1'}"/>
+                                <field name="actual_diff_scale" attrs="{'readonly':'1'}"/>
+                                <field name="actual_total" attrs="{'readonly':'1'}"/>
+                            </group>
+                            <group string="Proposed situation">
+                                <field name="contract_id" string="Contracto" domain="[('employee_id','=',employee_id)]"
+                                       on_change="onchange_contract_id(employee_id, contract_id, context)"
+                                       attrs="{'invisible':[('action_designation_requested','not in',['1','2','3','4','9',]),
+                                                                ('action_changes_requested','not in',['1','2','3','4']),
+                                                                ('action_out_requested','!=', '1')],
+                                                'required':['|',('action_designation_requested', 'in',['1','2','3','4','9']),'|',
+                                                ('action_changes_requested','in',['1','2','3','4']),'|',
+                                                ('action_out_requested','=', '1')]}"/>
+                                <label attrs="{'invisible':[('action_others_requested','!=','4')]}" style="color: #9F6000;background-color:text-align:justify; #FEEFB3;"
+                                        string="Esta Licencia solo es en caso de ser: Padre, Madre, Esposos e Hijos"/>
+                                <label attrs="{'invisible':[('action_out_requested','not in',['2','3','4','5','6','7','8','9','10','11'])]}"
+                                       string="El estado del empleado se pondra inactivo y todos los contratos de este empleado se le pondra la fecha actual como fecha de fin de contrato."
+                                       style="color: #9F6000;background-color: #FEEFB3;text-align:justify;"/>
+
+                                <field name="days_of_vacations"
+                                       on_change="num_days(effective_date, days_of_vacations)"
+                                       attrs="{'invisible': [('action_others_requested','not in',['1','2','3','4','5','6','7','8','10','11','12','13','14'])],
+                                                'required': [('action_others_requested','in',['1','2','3','4','5','6','7','8','10','11','12','13','14'])]}"/>
+
+                                <label name="end_of_leave_info" colspan="2" style="color: #9F6000;background-color: #FEEFB3;text-align:justify;"
+                                        string="El Campo Fin de Licencia, Sera auto calculado por la Fecha Efectiva y Cantidad de Dias."
+                                       attrs="{'invisible': [('action_others_requested','not in',['1','2','3','4','5','6','7','8','10','11','12','13','14'])]}"/>
+
+                                <field name="end_of_leave"
+                                       attrs="{'readonly':'1',
+                                       'invisible': [('action_others_requested','not in',['1','2','3','4','5','6','7','8','10','11','12','13','14'])]}"/>
+
+
+                                <field name="proposed_dependency"
+                                       attrs="{'invisible': [('action_changes_requested','not in',['1','2','4'])],
+                                        'required': ['|',('action_changes_requested','in',['1','2','4'])]}"/>
+
+                                <field name="proposed_ocupation" attrs="{'invisible': [('action_changes_requested','not in',['1','2','4']),
+                                                                        ('action_designation_requested','not in',['4','5','6','7','8'])],
+                                                                        'required': [('action_changes_requested','in',['1','2','4'])]}"/>
+
+                                <field name="proposed_parent_id" attrs="{'invisible': [('action_changes_requested','not in',['1','2','4'])],
+                                                                        'required': [('action_changes_requested','in',['1','2','4'])]}"/>
+
+                                <field name="proposed_orderly_turn"
+                                       attrs="{'invisible': [('action_designation_requested','not in',['4','5','7','8','10','11','12']),
+                                                            ('action_changes_requested','not in',['1','2','4'])],
+                                            'required': ['|',('action_designation_requested','in',['4','5','7','8','10','11','12']),
+                                                            ('action_changes_requested','in',['1','2','4'])]}"/>
+
+                                <field name="proposed_wage" attrs="{'invisible': [('action_changes_requested','not in',['1','2','3','4']),
+                                                                                ('action_designation_requested','not in',['4','5','6','7','8','10','11','12' ])],
+                                                                    'required': ['|',('action_changes_requested','in',['1','2','3','4']),
+                                                                                '|',('action_designation_requested','in',['4','5','7','8','10','11','12'])]}"/>
+
+                                <field name="proposed_diff_scale" attrs="{'invisible': [('action_changes_requested','not in',['1','2','3','4'])],
+                                                                    'required': [('action_changes_requested','in',['1','2','3','4'])]}"/>
+
+                                <field name="proposed_total" attrs="{'invisible': [('action_changes_requested','not in',['1','2','3','4'])],
+                                                                    'required': [('action_changes_requested','in',['1','2','3','4'])]}"/>
+
+                                <field name="proposed_company_id" attrs="{'invisible':[('action_designation_requested','not in',['4','5','6','7','8','10','11','12'])],
+                                                                        'required':[('action_designation_requested','in',['4','5','6','7','8','10','11','12'])]}"/>
+
+                                <field name="proposed_salary" attrs="{'invisible':[('action_designation_requested','not in',['4','5','6','7','8','10','11','12'])],
+                                                                        'required':[('action_designation_requested','in',['4','5','6','7','8','10','11','12'])]}"/>
+
+                                <field name="proposed_transfer"
+                                       attrs="{'invisible': [('action_changes_requested', 'not in', ['5', '2'])],
+                                                'required': [('action_changes_requested', 'in', ['5', '2'])]}"/>
+
+                                <field name="proposed_end_new_contract"
+                                       attrs="{'invisible': [('action_designation_requested','not in',['1','2','4','5','6','7','8','9','10','11','12'])],
+                                       'required':[('action_designation_requested','in', ['1','2','9'])]}"/>
+
+                                <field name="proposed_hours"
+                                        attrs="{'invisible':[('action_others_requested','!=', '9')],
+                                        'required':[('action_others_requested','=','9')]}" />
+
+
+                                <!--<field name="proposed_bonus" />-->
+                                <!--<field name="proposed_misconduct" />-->
+                                <!--<field name="proposed_misconduct_level" />-->
+
+                                <label name="info" colspan="2" style="color: #9F6000;background-color: #FEEFB3;text-align:justify !important;"
+                                        string="Ej: 1.15 Una Hora con Quince Minutos. 0.30 Trenta Minutos."
+                                       attrs="{'invisible':[('action_others_requested','!=','9')]}"/>
+
+                            </group>
+
+
+                            <!--These fields are informative only and regarding employee termination-->
+                            <group string="Employee Benefits" attrs="{'invisible':[('action_out_requested','=',False)]}">
+                                <group colspan="3">
+                                    <group>
+
+                                        <field name="monthly_salary" readonly="1"
+                                               on_change="calc_beneficios(employee_id,effective_date,action_out_requested,fue_preavisado,tomo_vacaciones,incluir_cesantia,incluir_salario_navidad,contract_id)"
+                                               />
+
+                                        <field name="average_daily_salary"
+                                               readonly="1"
+                                               />
+                                    </group>
+
+                                    <group>
+
+                                        <field name="anios_trabajados" readonly="1"
+                                               />
+                                        <field name="months_worked" readonly="1"
+                                               />
+                                        <field name="days_worked" readonly="1"
+                                               />
+                                    </group>
+                                </group>
+
+
+                            </group>
+                            <group  colspan="2" attrs="{'invisible':[('action_out_requested','=',False)]}">
+                                    <group attrs="{'readonly':[('states','!=','draft')]}">
+                                        <field name="fue_preavisado"
+                                               attrs="{'readonly':[('states','!=','draft')]}"
+                                               on_change="calc_beneficios(employee_id,effective_date,action_out_requested,fue_preavisado,tomo_vacaciones,incluir_cesantia,incluir_salario_navidad,contract_id)"/>
+                                        <field name="tomo_vacaciones"
+                                               attrs="{'readonly':[('states','!=','draft')]}"
+                                               on_change="calc_beneficios(employee_id,effective_date,action_out_requested,fue_preavisado,tomo_vacaciones,incluir_cesantia,incluir_salario_navidad,contract_id)" />
+                                    </group>
+                                    <group>
+                                        <field name="incluir_cesantia"
+                                                attrs="{'readonly':[('states','!=','draft')]}"
+                                               on_change="calc_beneficios(employee_id,effective_date,action_out_requested,fue_preavisado,tomo_vacaciones,incluir_cesantia,incluir_salario_navidad,contract_id)" />
+                                        <field name="incluir_salario_navidad"
+                                               attrs="{'readonly':[('states','!=','draft')]}"
+                                               on_change="calc_beneficios(employee_id,effective_date,action_out_requested,fue_preavisado,tomo_vacaciones,incluir_cesantia,incluir_salario_navidad,contract_id)" />
+                                    </group>
+                                </group>
+
+                                <group colspan="2" attrs="{'invisible':[('action_out_requested','=',False)]}">
+                                    <group>
+                                        <field name="vacations_days"  readonly="1" />
+                                        <field name="days_forewarning" readonly="1" attrs="{'invisible':[('fue_preavisado','=', True)]}"/>
+                                        <field name="severance_days" readonly="1" attrs="{'invisible':[('incluir_cesantia','=',False)]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="vacations" readonly="1" />
+                                        <field name="forewarning" readonly="1" attrs="{'invisible':[('fue_preavisado','=', True)]}"/>
+                                        <field name="severange_total" readonly="1" attrs="{'invisible':[('incluir_cesantia','=',False)]}"/>
+                                        <field name="christmas_salary" readonly="1" attrs="{'invisible':[('incluir_salario_navidad','=',False)]}"/>
+
+                                        <group colspan="2" style="width:50%;border-style: solid;border-top-width: 1px;">
+                                            <field name="employee_benefits_total"
+                                                   readonly="1"
+                                                    />
+                                        </group>
+                                    </group>
+                                </group>
+                            </group>
+
+                        <group string="Informacion Adicional">
+                            <group colspan="4" >
+                                <field name="creado_por" />
+                                <field name="confirmado_por"/>
+                            </group>
+                            <group colspan="4">
+                                <field name="aprobadogh_por"/>
+                                <field name="aprobaciondgh_por" readonly="1"/>
+                                <field name="aprobadode_por"/>
+                            </group>
+                            <soparator colspan="4"/>
+                            <group>
+                                <field name="cancelado_por"/>
+                            </group>
+                        </group>
+
+
+                        <group string="Observaciones y/o Comentarios" colspan="4">
+                            <field name="observations" widget="html"
+                                   placeholder="Insert any observation or commentary here."
+                                   nolabel="1"/>
+                        </group>
+
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_personnel_action_tree_view" >
+        <field name="name">hr.personnel.action.tree.view</field>
+        <field name="model">hr.personnel.action</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+                <tree default_order="-referencia" string="Personnel actions" version="7.0"
+                      colors="black:states=='confirmed';
+                               orange:states=='approved';
+                               olive:states=='aprobacion_de';
+                               blue:states=='draft';
+                               red:states=='cancelled';
+                               green:states=='applied'">
+
+                        <field name="referencia" />
+                        <field name="origin_employee_id"/>
+                        <field name="origin_department_id" string="Departamento/Solicitante"/>
+                        <field name="employee_id"/>
+                        <field name="actual_dependency" string="Departamento/Empleado"/>
+                        <field name="action_requested"/>
+                        <field name="effective_date"/>
+                        <field name="states"/>
+                </tree>
+        </field>
+    </record>
+    
+    <!-- Action and Menu for HR.Personnel.Action -->
+    <record model="ir.actions.act_window" id="view_personnel_action_form">
+        <field name="name">Personnel Actions</field>
+        <field name="res_model">hr.personnel.action</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        
+    </record>
+
+    <menuitem name="Personnel Action" parent="hr.menu_hr_main"
+              action="view_personnel_action_form"
+              id="menu_personnel_action" sequence="5"/>
+
+
+    <record id="personnel_action_search" model="ir.ui.view">
+        <field name="name">personnel_action_search</field>
+        <field name="model">hr.personnel.action</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Accion de Personal">
+                <field name="origin_employee_id"/>
+                <field name="employee_id"/>
+
+                <filter string="Confirmados"
+                        domain="[('states','=', 'confirmed')]"/>
+
+                <filter string="Sin Confirmar"
+                        domain="[('states', '=', 'draft')]"/>
+
+
+                <filter string="Aprobados por G.H"
+                        domain="[('states', '=', 'approved')]"/>
+
+                <filter string="Aprobados por D.E"
+                        domain="[('states', '=', 'aprobacion_de')]"/>
+
+                <filter string="Completados"
+                        domain="[('states', '=', 'applied')]"/>
+
+                <filter string="Cancelados"
+                        domain="[('states','=', 'cancelled')]"/>
+
+
+                <filter string="Designaciones"
+                        domain="[('action_requested','=', 'designacion')]"/>
+
+                <filter string="Cambios"
+                        domain="[('action_requested','=', 'cambios')]"/>
+
+                <filter string="Lic./Vac."
+                        domain="[('action_requested','=', 'vacation_and_licenses')]"/>
+
+                <filter string="Salidas"
+                        domain="[('action_requested','=', 'salidas')]"/>
+
+
+                <group expand="0" string="Group By">
+                    <filter string="Solicitante"
+                            context="{'group_by': 'origin_employee_id'}"/>
+
+                    <filter string="Empleado"
+                            context="{'group_by': ['employee_id']}"/>
+
+                    <filter string="Departamento/Solicitante"
+                            context="{'group_by': ['origin_department_id']}"/>
+
+                    <filter string="Departamento/Empleado"
+                            context="{'group_by': ['actual_dependency']}"/>
+
+                    <filter string="Estados"
+                            context="{'group_by': ['states']}"/>
+
+                    <filter string="Accion Solicitada"
+                            context="{'group_by': ['action_requested']}"/>
+                </group>
+
+
+            </search>
+        </field>
+    </record>
+
+    <!--Cron job that runs personnel actions once a day.-->
+    <record id="ir_cron_personnel_actions" model="ir.cron">
+        <field name="name">Run Personnel Actions Job</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model">hr.personnel.action</field>
+        <field name="function">run_personnel_actions</field>
+        <field name="args">()</field>
+    </record>
+
+    <!--Cron job that runs personnel actions once a day.-->
+    <record id="ir_cron_personnel_actions2" model="ir.cron">
+        <field name="name">Acciones de Personal - Activar Usuario</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model">hr.personnel.action</field>
+        <field name="function">enable_employee_from_licence_or_vacation</field>
+        <field name="args">()</field>
+    </record>
+
+</data>
+</openerp>

@@ -1,0 +1,77 @@
+<openerp>
+  <data>
+    <record model="ir.ui.view" id="zonas_liest_view">
+      <field name="name">zonas_liest_view</field>
+      <field name="model">viatico.zonas</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <tree string="Zonas">
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="zonas_form_view">
+      <field name="name">zonas_form_view</field>
+      <field name="model">viatico.zonas</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Zona/Formulario">
+          <sheet>
+            <div>
+              <label for="name" string="Nombre de la Zona" class="oe_edit_only" />
+              <h1>
+                <field name="name"/>
+              </h1>
+            </div>
+
+            <group>
+              <field name="escala_id"/>
+            </group>
+
+            <group col="1">
+              <field name="vehiculos_ids" string="Vehiculos">
+                <tree>
+                  <field name="vehiculo_id"/>
+                  <field name="peaje"/>
+                </tree>
+              </field>
+            </group>
+
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="zonas_vehiculos_form_view">
+      <field name="name">zonas_vehiculo_form_view</field>
+      <field name="model">viatico.zonas.linea_peaje</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form>
+          <group>
+            <field name="vehiculo_id"/>
+            <field name="peaje"/>
+
+          </group>
+        </form>
+      </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="viatico_zonas_view">
+      <field name="name">Viaticos/Zonas.</field>
+      <field name="res_model">viatico.zonas</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Zonas"
+              action="viatico_zonas_view"
+              id="menu_de_viaticos_zonas"
+              sequence="22"
+              parent="submenu_viaticos"/>
+
+  </data>
+</openerp>

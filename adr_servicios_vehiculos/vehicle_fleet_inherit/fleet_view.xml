@@ -1,0 +1,21 @@
+<openerp>
+  <data>
+    <record id="fleet_transport_button" model="ir.ui.view">
+      <field name="name">fleet_vehicle_inherit_form_view</field>
+      <field name="model">fleet.vehicle</field>
+      <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//sheet/div[@class='oe_right oe_button_box']" position="inside">
+
+          <button name="open_transport_services" type="object"
+                  class="oe_stat_button" icon="fa-car"
+                  help="Muestra todos los pedidos de transportacion">
+            <field name="count_transp" string="Transporte"
+                   widget="statinfo"/>
+          </button>
+
+        </xpath>
+      </field>
+    </record>
+  </data>
+</openerp>

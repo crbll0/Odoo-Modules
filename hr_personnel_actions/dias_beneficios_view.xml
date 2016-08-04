@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="dias_beneficios_tree_view">
+            <field name="name">dias.beneficios.tree.view</field>
+            <field name="model">dias.beneficios</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                    <tree string="Dias para Calcular Beneficios"  editable="bottom">
+                        <!--<field name="salario_minimo" required="1"/>-->
+                        <field name="preaviso_3" required="1"/>
+                        <field name="preaviso_7" required="1"/>
+                        <field name="preaviso_12" required="1"/>
+
+                        <field name="cesantia_3" required="1"/>
+                        <field name="cesantia_7" required="1"/>
+                        <field name="cesantia_12" required="1"/>
+                        <field name="cesantia_5" required="1"/>
+                    </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="view_dias_beneficio_action_form">
+            <field name="name">Conf Dias Beneficio</field>
+            <field name="res_model">dias.beneficios</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+
+        </record>
+
+
+        <menuitem name="Conf Dias Beneficios" parent="hr.menu_hr_configuration"
+                  action="view_dias_beneficio_action_form"
+                  id="menu_conf_dias_beneficio" sequence="30"/>
+
+
+    </data>
+
+</openerp>
+

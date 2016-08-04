@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="adr_viaticos_registro_view_tree" model="ir.ui.view">
+        <field name="name">Adr Viaticos Wizard</field>
+        <field name="model">viatico.registro</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+
+          <tree default_order="-secuencia"
+                colors="blue:state=='solic';
+                       red:state=='cancel';
+                       green:state=='completado'">
+
+            <field name="secuencia"/>
+            <field name="solicitante" string="Solicitante"/>
+            <field name="departamento" />
+            <field name="tipo"/>
+            <field name="escala_id"/>
+            <field name="zonas_id"/>
+            <field name="state"/>
+            <field name="stage"/>
+          </tree>
+
+        </field>
+    </record>
+
+    <record id="adr_viaticos_registro_view_form" model="ir.ui.view">
+      <field name="name">Adr Viaticos Wizard</field>
+      <field name="model">viatico.registro</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <button type="object" string="Cancelar" name="cancel" attrs="{'invisible': [('state', 'in',['cancel','val'])]}"
+                    class="oe_read_only" groups="" />
+            <button type="object" string="Confirmar" name="confirm" states="solic"
+                    class="oe_read_only" groups="internal_requisition.internal_requisition_manager" />
+            <button type="object" string="Asignar Transporte" name="asignacion" states="confirm"
+                    class="oe_read_only" groups="__export__.res_groups_420" />
+            <button type="object" string="Validar" name="validar" states="transp"
+                    class="oe_read_only" groups="__export__.res_groups_410" />
+
+            <field name="state" widget="statusbar"
+                   statusbar_visible="solic,confirm,transp,val"/>
+
+            <field name="stage" widget="statusbar"
+                   statusbar_visible="solic,confirm,transp"/>
+
+
+          </header>
+          <sheet>
+            <div>
+              <label for="secuencia" class="oe_edit_only"/>
+  
+              <h1>
+                <field name="secuencia"/>
+              </h1>
+            </div>
+
+            
+            <group>
+              <group>
+                <field name="solicitante" string="Solicitante"/>
+                <field name="departamento"/>
+                <field name="fecha_solicitud"/>
+              </group>
+
+              <group >
+                <field name="fecha_viaje_desde" required="1" attrs="{'readonly': [('state', '=', 'val')]}"/>
+                <field name="fecha_viaje_hasta" required="1" attrs="{'readonly': [('state', '=', 'val')]}"/>
+              </group>
+
+            </group>
+
+
+            <group>
+
+              <group>
+                <field name="escala_id"  attrs="{'readonly': [('state', '=', 'val')]}"/>
+              </group>
+
+              <group>
+                <field name="zonas_id" attrs="{'readonly': [('state', '=', 'val')]}"/>
+              </group>
+            </group>
+
+            <group>
+              <group>
+                <field name="tipo" attrs="{'readonly': [('state', '=', 'val')]}"/>
+              </group>
+              <group>
+                <field name="vehiculo_en_zona" invisible="1"/>
+
+
+                <field name="vehiculo"
+                       attrs="{'invisible': [('state', 'not in', ['confirm','transp','val'])],
+                       'required':[('state','in',['confirm', 'transp'])],
+                       'readonly': [('state', '=', 'val')]}"                />
+                <p attrs="{'invisible': ['|', '|',
+                ('vehiculo_en_zona', '=', True),
+                ('state', 'not in', ['confirm','transp','val']), ('vehiculo', '=', False)]}"
+                   class="text-danger bg-danger" colspan="2">
+                  El Vehiculo Seleccionado no aparece Registrado para esta Zona.<br/>
+                  Por favor CANCELAR la Edicion de este Documento y agregar el Vehiculo a la zona con su monto de Peaje.
+                </p>
+              </group>
+            </group>
+
+            <notebook>
+              <page string="Registros Empleados">
+                <group col="1" name="lista_empleados">
+                  <field name="registro_lines" nolabel="1" attrs="{'readonly': [('state', '=', 'val')]}">
+
+                    <tree>
+                      <field name="employee_id"/>
+                      <field name="job_id"/>
+                      <field name="concepto_id"/>
+                      <field name="desayuno"/>
+                      <field name="almuerzo"/>
+                      <field name="cena"/>
+                      <field name="alojamiento"/>
+                      <field name="dia_completo"/>
+                      <field name="gasto_estra"/>
+                      <field name="gasto_imp"/>
+                    </tree>
+
+                  </field>
+
+                  <group class="oe_subtotal_footer pull-right" name="total">
+                    <h2>
+                      <field name="total" readonly="1" string="Total"/>
+                    </h2>
+
+                  </group>
+
+                </group>
+
+              </page>
+              <page string="Notas">
+                <group col="1">
+
+                  <field name="notas" placeholder="Notas. . ."/>
+
+                </group>
+              </page>
+            </notebook>
+
+            <group>
+              <group>
+                <field name="solicitado_por"/>
+                <field name="confirmado_por"/>
+                <field name="tranps_por"/>
+              </group>
+
+              <group>
+                <field name="validado_por"/>
+                <field name="cancelado_por"/>
+              </group>
+
+            </group>
+
+          </sheet>
+        </form>
+      </field>
+      </record>
+
+    <record id="adr_viaticos_registro_view_line_form" model="ir.ui.view">
+      <field name="name">Lineas Wizard Form</field>
+      <field name="model">viatico.registro.line</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form>
+          
+          <group string="Informacion del Empleado">
+            <group>
+              <field name="employee_id"/>
+            </group>
+            <group>
+              <field name="job_id"/>
+            </group>
+          </group>
+
+          <group string="Informacion del Concepto">
+
+            <group colspan="4">
+              <field name="concepto_id" invisible="1"/>
+            </group>
+
+          </group>
+
+          <newline/>
+
+          <h3 class="text-center" attrs="{'invisible': [('concepto_id', '!=', False)]}" style="color:red;">
+            La <mark>Posicion</mark> de este Empleado no esta Registrada en las Categoria de Viaticos con la Escala y Zona Seleccionada.
+          </h3>
+
+          <div attrs="{'invisible': [('concepto_id', '=', False)]}">
+            <p class="text-center" colspan="4">
+              <strong>Elegir el/los concepto(s) a pagar por el viatico</strong>
+            </p>
+
+            <group colspan="6" col="4" >
+
+              <group col="2">
+                <field name="pay_desayuno"/>
+                <field name="pay_almuerzo"/>
+                <field name="pay_cena"/>
+              </group>
+              <group col="2">
+                <field name="pay_alojamiento"/>
+                <field name="pay_dia_completo"/>
+              </group>
+              <group col="2">
+                <field name="pay_gasto_estra"/>
+                <field name="pay_gasto_imp"/>
+              </group>
+            </group>
+
+            <p style="font-size: 12px;">Si al Marcar el concepto el monto no se
+              ve reflejado en
+              <mark>Monto a Pagar</mark>, significa que el Concepto con
+              la categoria seleccionada no Incluye dicho pago.
+            </p>
+
+            <group colspan="6" col="4" string="Monto a Pagar">
+
+              <group col="2">
+                <field name="desayuno" readonly="1"/>
+                <field name="almuerzo" readonly="1"/>
+                <field name="cena" readonly="1"/>
+              </group>
+              <group col="2">
+                <field name="alojamiento" readonly="1"/>
+                <field name="dia_completo" readonly="1"/>
+              </group>
+              <group col="2">
+                <field name="gasto_estra" readonly="1"/>
+                <field name="gasto_imp" readonly="1"/>
+              </group>
+            </group>
+            <p class="text-center">Este monto es calculado teniendo en cuenta las fechas Desde y Hasta que se han Suministrado.</p>
+          </div>
+
+        </form>
+
+          </field>
+      </record>
+
+
+    <record id="search_view_viatico_registro" model="ir.ui.view">
+    <field name="name">Search Registro Viaticos</field>
+    <field name="model">viatico.registro</field>
+    <field name="arch" type="xml">
+        <search string="Filtos">
+
+            <group string="Estados">
+
+                <filter string="Solicitado" domain="[('state','=', 'solic')]"/>
+                <filter string="Confirmado" domain="[('state','=', 'confirm')]"/>
+                <filter string="Transporte Asig." domain="[('state','=', 'transp')]"/>
+                <filter string="Validado" domain="[('state','=', 'val')]"/>
+                <filter string="Cancelado" domain="[('state','=', 'cancel')]"/>
+
+            </group>
+
+            <group string="Agrupar por">
+
+                <filter string="Solicitantes"
+                        context="{'group_by': 'solicitante'}"/>
+
+                <filter string="Departamentos"
+                        context="{'group_by': 'departamento'}"/>
+
+                <filter string="Estados"
+                        context="{'group_by': 'state'}"/>
+
+                <filter string="Etapas"
+                        context="{'group_by': ['stage']}"/>
+
+                <filter string="Tipos" context="{'group_by': ['tipo']}"/>
+                <filter string="Escalas" context="{'group_by': ['escala_id']}"/>
+                <filter string="Zonass" context="{'group_by': ['zonas_id']}"/>
+
+            </group>
+
+        </search>
+    </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="viatico_reqistros_view">
+      <field name="name">Registros Viaticos</field>
+      <field name="res_model">viatico.registro</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Registro Viaticos/Dieta"
+              action="viatico_reqistros_view"
+              id="menu_de_viaticos_registros"
+              sequence="11"
+              parent="account.menu_finance_bank_and_cash"/>
+
+
+
+    <!--<record model="ir.actions.act_window" id="viatico_registro_view">-->
+      <!--<field name="name">Registros Viaticos.</field>-->
+      <!--<field name="res_model">viatico.registro</field>-->
+      <!--<field name="view_type">form</field>-->
+      <!--<field name="view_mode">tree,form</field>-->
+    <!--</record>-->
+
+    <!--&lt;!&ndash;<menuitem name="Registros Viaticos"&ndash;&gt;-->
+            <!--&lt;!&ndash;action="viatico_registro_view"&ndash;&gt;-->
+            <!--&lt;!&ndash;id="menu_de_viaticos_registro"&ndash;&gt;-->
+            <!--&lt;!&ndash;sequence="19"&ndash;&gt;-->
+            <!--&lt;!&ndash;parent="submenu_viaticos"/>&ndash;&gt;-->
+    <!--&lt;!&ndash;&ndash;&gt;-->
+    <!--<menuitem name="Registro Viaticos"-->
+              <!--action="viatico_registro_view"-->
+              <!--id="menu_viaticos_registros"-->
+              <!--sequence="24"-->
+              <!--parent="submenu_viaticos"/>-->
+
+  </data>
+</openerp>

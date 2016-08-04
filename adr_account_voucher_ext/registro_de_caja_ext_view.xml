@@ -1,0 +1,28 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="account_view_bank_statement_form2_ext">
+			<field name="name">account view bank statement form2 ext</field>
+			<field name="model">account.bank.statement</field>
+			<field name="inherit_id" ref="account.view_bank_statement_form2"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<data>
+					<field name="user_id" position="replace">
+                        <field name="user_id"
+                               attrs="{'readonly':[('state','!=','draft')]}"
+                               string="Responsible"
+                               on_change="onchanve_userid(user_id)"
+                        />
+
+                    </field>
+                    <field name="user_id" position="after">
+                         <field name="login_user"/>
+					</field>
+
+				</data>
+			</field>
+		</record>
+
+    </data>
+</openerp>
+

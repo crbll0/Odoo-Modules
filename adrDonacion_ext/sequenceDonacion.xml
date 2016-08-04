@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="ir.sequence.type" id="seq_type_donacion">
+            <field name="name">Secuencias Codigo Donacion</field>
+            <field name="code">donation.campaign</field>
+        </record>
+
+        <record model="ir.sequence" id="seq_donacion">
+            <field name="name">Secuencias Codigo Donacion </field>
+            <field name="code">donation.campaign</field>
+            <field name="padding">10</field>
+            <field name="implementation">no_gap</field>
+        </record>
+
+    </data>
+</openerp>

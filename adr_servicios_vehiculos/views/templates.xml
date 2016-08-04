@@ -1,0 +1,178 @@
+<openerp>
+  <data>
+
+    <!--List View-->
+    <record model="ir.ui.view" id="fleet_transport_services_list">
+      <field name="name">fleet_transport_services_list</field>
+      <field name="model">fleet.transport.services</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <tree default_order="-secuencia"
+              colors="blue:state=='solic';
+                       red:state=='cancel';
+                       green:state=='done'">
+
+          <field name="secuencia"/>
+          <field name="solicitante_id"/>
+          <field name="department_id"/>
+          <field name="vehiculo_id"/>
+          <field name="destino_id"/>
+          <field name="fecha_solicitud"/>
+          <field name="fecha_desde"/>
+          <field name="fecha_hasta"/>
+          <field name="state"/>
+          <field name="stage"/>
+
+        </tree>
+      </field>
+    </record>
+
+
+    <!--Form View -->
+    <record model="ir.ui.view" id="fleet_transport_services_FORM">
+    <field name="name">fleet_transport_services_form</field>
+    <field name="model">fleet.transport.services</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button type="object" name="cancelar" string="Cancelar"
+                  attrs="{'invisible': [('state', 'in', ['done','cancel'])]}"/>
+          <button type="object" name="confirmacion" string="Confirmar"
+                  states="solic"
+                  groups="internal_requisition.internal_requisition_manager"/>
+          <button type="object" name="asignacion_transporte"
+                  string="Asigar Transp."
+                  states="confirm" groups="__export__.res_groups_420"/>
+          <button type="object" name="completado" string="Completar"
+                  states="asig"
+                  groups="__export__.res_groups_420"/>
+
+          <field name="state" widget="statusbar"
+                 statusbar_visible="solic,confirm,asig,done"/>
+
+          <field name="stage" widget="statusbar"
+                 statusbar_visible="solic,confirm,asig,done"/>
+
+
+        </header>
+        <sheet>
+          <div class="oe_title">
+            <label for="secuencia" class="oe_edit_only"/>
+            <h1>
+              <field name="secuencia"/>
+            </h1>
+          </div>
+
+          <group>
+            <group>
+              <field name="solicitante_id"/>
+              <field name="department_id"/>
+            </group>
+
+            <group>
+              <field name="fecha_solicitud"/>
+              <field name="origen" attrs="{'invisible': [('origen', '=', False)]}"/>
+            </group>
+
+          </group>
+          <group>
+            <group>
+              <field name="fecha_desde"/>
+              <field name="fecha_hasta"/>
+            </group>
+
+            <group>
+              <field name="vehiculo_id"
+                     attrs="{'invisible': [('state', '=', 'solic')],
+                     'required': [('state', '=', 'confirm')]}"/>
+              <field name="destino_id"/>
+            </group>
+          </group>
+
+          <group string="">
+            <newline/>
+            <group>
+              <field name="solicitado_por"/>
+              <field name="confirmacion_por"/>
+            </group>
+            <group>
+              <field name="asignacion_por"/>
+              <field name="compleatdo_por"/>
+              <field name="cancelado_por"/>
+            </group>
+
+
+          </group>
+
+        </sheet>
+      </form>
+    </field>
+    </record>
+
+    <record id="fleet_transport_services_search" model="ir.ui.view">
+    <field name="name">fleet_transport_services_search</field>
+    <field name="model">fleet.transport.services</field>
+    <field name="arch" type="xml">
+        <search string="Filtos">
+
+          <group string="Estados">
+            <filter string="Solicitado" domain="[('state','=', 'solic')]"/>
+            <filter string="Confirmado" domain="[('state','=', 'confirm')]"/>
+            <filter string="Trans. Asignado" domain="[('state','=', 'asig')]"/>
+            <filter string="Completado" domain="[('state','=', 'done')]"/>
+            <filter string="Cancelado" domain="[('state','=', 'cancel')]"/>
+
+          </group>
+
+            <group string="Agrupar por">
+
+              <filter string="Solicitante"
+                        context="{'group_by': 'solicitante_id'}"/>
+              <filter string="Departamento"
+                        context="{'group_by': 'department_id'}"/>
+              <separator/>
+              <filter string="Vehiculo"
+                        context="{'group_by': 'vehiculo_id'}"/>
+              <filter string="Destino"
+                        context="{'group_by': 'destino_id'}"/>
+              <newline/>
+              <filter string="Estado"
+                      context="{'group_by': 'state'}"/>
+              <filter string="Etapa"
+                      context="{'group_by': 'stage'}"/>
+
+            </group>
+
+          <group string="Agrupar por Meses">
+            <filter string="Fecha Solicitus" domain="[ ]" context="{'group_by': 'fecha_solicitud:month'}" />
+            <newline/>
+
+            <filter string="Fecha Desde" domain="[ ]" context="{'group_by': 'fecha_desde:month'}" />
+            <newline/>
+
+            <filter string="Fecha Hasta" domain="[ ]" context="{'group_by': 'fecha_hasta:month'}" />
+
+          </group>
+
+        </search>
+    </field>
+    </record>
+
+
+
+    <record model="ir.actions.act_window" id="fleet_services">
+      <field name="name">fleetservices</field>
+      <field name="res_model">fleet.transport.services</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Solicitud de Transporte"
+              action="fleet_services"
+              id="fleet_servicesmenu"
+              sequence="20"
+              parent="fleet.fleet_vehicles"/>
+
+  </data>
+</openerp>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="ir.sequence.type" id="seq_servicio_transp">
+            <field name="name">Secuencia Para Serv. Transp</field>
+            <field name="code">fleet.transport.services</field>
+        </record>
+
+        <record model="ir.sequence" id="seq_servicio_transp_seq">
+            <field name="name">Secuencia Serv. Transp.</field>
+            <field name="code">fleet.transport.services</field>
+            <field name="padding">5</field>
+            <field name="prefix">S-T/%(year)s/</field>
+        </record>
+
+    </data>
+</openerp>

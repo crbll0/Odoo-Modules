@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_adr_realizar_depos_adr_realizar_depos,adr_realizar_depos.adr_realizar_depos,model_adr_realizar_depos_adr_realizar_depos,,1,0,0,0

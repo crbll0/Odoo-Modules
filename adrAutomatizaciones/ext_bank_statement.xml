@@ -1,0 +1,16 @@
+<openerp>
+    <data>
+        <record id="account_view_bank_statement_form2_ext"
+                    model="ir.ui.view">
+            <field name="name">account bank statement form</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <button name="actualizar_monto" type="object" string="Actualizar Balance" groups="" />
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

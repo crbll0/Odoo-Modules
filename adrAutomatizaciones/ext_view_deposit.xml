@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="deposit_ticket_form_ext" model="ir.ui.view">
+            <field name="name">deposit.ticket.form.ext</field>
+            <field name="model">deposit.ticket</field>
+            <field name="inherit_id" ref="npg_account_make_deposit.view_deposit_ticket_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group[@col='4']" position="before">
+                     <div class="oe_title">
+                        <h3>
+                            <label for="secuencia" class="oe_edit_only" />
+                        </h3>
+                        <h1>
+                            <field name="secuencia"/>
+                        </h1>
+                     </div>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="deposit_ticket_tree_ext" model="ir.ui.view">
+            <field name="name">deposit.ticket.tree.ext</field>
+            <field name="model">deposit.ticket</field>
+            <field name="inherit_id" ref="npg_account_make_deposit.view_deposit_ticket_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+
+                    <field name="secuencia"/>
+
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</openerp>

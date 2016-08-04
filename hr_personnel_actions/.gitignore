@@ -1,0 +1,10 @@
+#Python Compiled
+*.pyc
+
+#Vim
+*.swp
+*.orig
+*.*~
+
+#Rope
+.ropeproject

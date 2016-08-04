@@ -1,0 +1,28 @@
+<openerp>
+  <data>
+    <record model="ir.ui.view" id="escala_liest_view">
+      <field name="name">escala_liest_view</field>
+      <field name="model">viatico.escala</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <tree string="Escalas" editable="top">
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="viatico_escala_view">
+      <field name="name">Viaticos/Escalas.</field>
+      <field name="res_model">viatico.escala</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Escalas"
+              action="viatico_escala_view"
+              id="menu_de_viaticos_escala"
+              sequence="21"
+              parent="submenu_viaticos"/>
+
+  </data>
+</openerp>

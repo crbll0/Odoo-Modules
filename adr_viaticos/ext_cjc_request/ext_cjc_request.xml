@@ -1,0 +1,20 @@
+<openerp>
+  <data>
+    <record id="ext_cjc_request_form_view" model="ir.ui.view">
+      <field name="name">ext_cjc_request_form_view</field>
+      <field name="model">cjc_request.cjc_request</field>
+      <field name="inherit_id" ref="cjc_request.cjc_request_caja_chica_form"/>
+      <field name="arch" type="xml">
+        <field name="balance" position="after">
+          <field name="tipo" invisible="1"/>
+          <!--<field name="viatico_registro_id" invisible="1"/>-->
+        </field>
+
+        <field name="limite_caja" position="after">
+          <label string="No aplica para Viaticos y Dietas"/>
+
+        </field>
+      </field>
+    </record>
+  </data>
+</openerp>

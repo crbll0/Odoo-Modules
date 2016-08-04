@@ -1,0 +1,21 @@
+<openerp>
+  <data>
+    <record id="acciones_personal_button" model="ir.ui.view">
+      <field name="name">acciones_personal_button</field>
+      <field name="model">hr.employee</field>
+      <field name="inherit_id" ref="hr.view_employee_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//sheet/div[@class='oe_right oe_button_box']" position="inside">
+
+          <button name="open_accion_personal" type="object"
+                  class="oe_stat_button" icon="fa-male"
+                  help="Muestra todas las Acciones de Personal de este Usuario.">
+            <field name="num_acciones" string="Acciones De Personal"
+                   widget="statinfo"/>
+          </button>
+
+        </xpath>
+      </field>
+    </record>
+  </data>
+</openerp>

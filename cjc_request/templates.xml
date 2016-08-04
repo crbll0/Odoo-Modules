@@ -1,0 +1,232 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="cjc_request_caja_chica_form">
+        <field name="name">Caja Chica Form</field>
+        <field name="model">cjc_request.cjc_request</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Cancelar" name="cancel" type="object" />
+
+                    <button string="Validar" name="validar1" type="object"
+                            states="solic" groups="internal_requisition.internal_requisition_manager"/>
+
+                    <button string="Aprobar" name="aprobar" type="object"
+                            states="validar1" groups="__export__.res_groups_91"/>
+
+                    <button string="Entregar" name="entrega" type="object"
+                            states="aprob" groups="__export__.res_groups_94"/>
+
+
+                    <button string="Recibido" name="recibido" type="object"
+                            states="entrega"
+                            groups="internal_requisition.internal_requisition_manager,internal_requisition.internal_requisition_user"/>
+
+                    <button string="Registrar Facturas" name="registrar" type="object"
+                            states="recibido" class="oe_highlight"
+                            groups="__export__.res_groups_94"/>
+
+                    <button string="Recibir Fact." name="rec_fact" type="object"
+                            states="recibido"
+                            groups="__export__.res_groups_94"/>
+
+                    <button string="Auditar" name="auditar" type="object"
+                            states="auditoria" groups="__export__.res_groups_373"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="solic,validar1,aprob,entrega,recibido,auditoria,done"/>
+                    <field name="stage" widget="statusbar"
+                           statusbar_visible="solic,validar1,aprob,entrega,recibido,rec_fact,auditoria"/>
+                </header>
+                <sheet>
+                    <div class="oe_title" style="color:#7C7BAD;">
+                        <h3>
+                            <label for="name" class="oe_edit_only" />
+                        </h3>
+                        <h1>
+                            <field name="name" attrs="{'readonly':'1'}" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="journal_id" invisible="1"/>
+                            <field name="period_id" invisible="1" />
+                            <field name="usuario"
+                                   attrs="{'readonly':[('state', '!=', 'solic')]}"/>
+                            <field name="departamento"
+                                   attrs="{'readonly':[('state', '!=', 'solic')]}"/>
+                            <field name="monto_solicitado"
+                            attrs="{'readonly': [('state', 'not in', ['solic','validar1','recibido'])]}"/>
+                           <mark>
+                               <h6>Limite de Solicitud: </h6>
+                               <h6><field name="limite_caja" /></h6>
+                           </mark>
+
+                        </group>
+
+                        <group >
+                            <field name="caja_id"
+                                   widget="selection"
+                                   domain="[('state', '=', 'open'),
+                                            ('is_cjc', '=', 'True')]"
+                                   attrs="{'invisible': [('state', 'in', ['solic','validar1'])],
+                                            'readonly': [('state', 'not in', ['solic','validar1','aprob'])],
+                                            'required': [('state', 'not in', ['solic','validar1'])]}"/>
+                            <field name="balance"
+                                   attrs="{'invisible': [('state', 'in', ['solic','validar1'])]}"/>
+
+                        </group>
+                    </group>
+                    <h2 class="oe_horizontal_separator oe_clear">
+                        <label for="concepto" string="Conceptos"/>
+                    </h2>
+                    <field name="concepto"
+                           attrs="{'readonly':[('state', '!=', 'solic')]}"/>
+
+                    <separator colspan="4" style="margin-top:40px;"/>
+
+                    <field name="cjc_line" readonly="1" />
+
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="total" class="oe_subtotal_footer_separator" string="Total Sin Impuestos"/>
+                        <field name="monto_solicitado2" class="oe_subtotal_footer_separator" string="Monto Solicitado" readonly="1"/>
+                        <field name="diferencia" class="oe_subtotal_footer_separator" string="="/>
+                    </group>
+
+                    <!--<b>Total Registrado sin Impuesto:</b>-->
+                    <!--<div class="oe_right" style="margin-left:-50px">-->
+                      <!--<b><field name="total" /></b>-->
+                    <!--</div>-->
+
+                    <group string="Informacion Adicional">
+                        <group>
+                            <field name="solicitado_por" />
+                            <field name="validado1_por" />
+                            <field name="aprobado_por" />
+                            <field name="entregado_por" />
+                            <field name="recibido_por" />
+                        </group>
+                        <group>
+                            <field name="rec_fact_por" />
+                            <!--<field name="validado_por" />-->
+                            <field name="auditado_por" />
+                            <field name="completado_por" />
+                            <field name="cancelado_por" />
+                        </group>
+                    </group>
+
+                    <label string="Notas" />
+                    <field name="notas" />
+                </sheet>
+            </form>
+        </field>
+        </record>
+
+        <record model="ir.ui.view" id="cjc_request_caja_chica_list" >
+        <field name="name">Caja Chica List</field>
+        <field name="model">cjc_request.cjc_request</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree default_order="-create_date" colors="red:state=='cancel';green:state=='done'">
+                <field name="name" />
+                <field name="usuario" />
+                <field name="departamento" />
+                <field name="monto_solicitado" />
+                <field name="concepto" />
+                <field name="caja_id" />
+                <field name="balance" />
+                <field name="stage" />
+                <field name="state" />
+            </tree>
+        </field>
+        </record>
+
+        <record id="cjc_request_caja_chica" model="ir.ui.view">
+        <field name="name">Caja Chica Search View</field>
+        <field name="model">cjc_request.cjc_request</field>
+        <field name="arch" type="xml">
+            <search string="Filtos">
+
+                <group string="Estados">
+
+                    <filter string="Solicitado"
+                            domain="[('state','=', 'solic')]"/>
+
+                    <filter string="Validado"
+                            domain="[('state', '=', 'validar1')]"/>
+
+                    <filter string="Aprobado"
+                            domain="[('state', '=', 'aprob')]"/>
+
+                    <filter string="Entregado"
+                            domain="[('state', '=', 'entrega')]"/>
+
+                    <filter string="Recibido"
+                            domain="[('state', '=', 'recibido')]"/>
+
+                    <filter string="Auditado"
+                            domain="[('state', '=', 'auditoria')]"/>
+
+                    <filter string="Completado"
+                            domain="[('state', '=', 'done')]"/>
+
+                    <filter string="Cancelado"
+                            domain="[('state', '=', 'cancel')]"/>
+                </group>
+
+                <group string="Agrupar por">
+
+                    <filter string="Usuario"
+                            context="{'group_by': 'usuario'}"/>
+
+                    <filter string="Departamento"
+                            context="{'group_by': 'departamento'}"/>
+
+                    <filter string="Caja Chica"
+                            context="{'group_by': 'caja_id'}"/>
+
+                    <filter string="Etapa"
+                            context="{'group_by': ['stage']}"/>
+
+                    <filter string="Estado"
+                            context="{'group_by': ['state']}"/>
+
+                </group>
+
+            </search>
+        </field>
+        </record>
+
+
+        <record id="cjc_request_cjc_line_list" model="ir.ui.view">
+            <field name="name">Lineas de Caja Chica</field>
+            <field name="model">cjc_request.cjc_line</field>
+            <field name="arch" type="xml">
+                <tree string="Facturas Registradas" editable="bottom">
+                    <field name="fecha"/>
+                    <field name="comunicacion"/>
+                    <field name="referencia"/>
+                    <field name="partner_id"/>
+                    <field name="importe"/>
+                </tree>
+
+            </field>
+        </record>
+
+
+
+        <record model="ir.actions.act_window" id="view_cjc_request_form">
+            <field name="name">Caja Chica</field>
+            <field name="res_model">cjc_request.cjc_request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--Para agregarlo al meno Contabilidad/Caja y Banco-->
+        <menuitem name="Caja Chica" parent="account.menu_finance_bank_and_cash"
+                  action="view_cjc_request_form"
+                  id="menu_caja_chica" sequence="10" />
+
+    </data>
+</openerp>

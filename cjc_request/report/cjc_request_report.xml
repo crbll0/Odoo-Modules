@@ -1,0 +1,209 @@
+<openerp>
+    <data>
+        <report id="report_cjc_request_report"
+                name="cjc_request.cjc_request_report"
+                string="Caja Chica"
+                model="cjc_request.cjc_request"
+                report_type="qweb-pdf"
+                file="cjc_request.cjc_request_report"
+            />
+
+
+        <template id="cjc_request.cjc_request_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="cjc">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+
+                            <h2 class="text-center">Caja Chica </h2>
+                            <div class="row">
+                                <h2> <span t-field="cjc.name" /></h2>
+
+                                <div class="col-xs-8">
+
+                                    <p>
+                                        <b>Usuario: </b>
+                                        <span t-field="cjc.usuario" />
+                                    </p>
+                                    <p>
+                                        <b>Departamento: </b>
+                                        <span t-field="cjc.departamento" />
+                                    </p>
+                                    <p>
+                                        <b>Monto Solicitado: </b>
+                                        <span t-field="cjc.monto_solicitado" />
+                                    </p>
+                                    <p>
+                                        <small>
+                                            <b>Limite de Solicitud: </b>
+                                            <span t-field="cjc.limite_caja"/>
+                                        </small>
+                                    </p>
+
+                                </div>
+
+                                <div class="col-xs-4">
+                                    <p>
+                                        <b>Caja: </b>
+                                        <span t-field="cjc.caja_id" />
+                                    </p>
+                                    <p>
+                                        <b>Balance: </b>
+                                        <span t-field="cjc.balance" />
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <h2>Conceptos</h2>
+                                <div class="col-xs-12">
+                                    <p><span t-field="cjc.concepto" />
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <table class="table table-condensed">
+
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Comunicacion</th>
+                                        <th>Referencia</th>
+                                        <th>Compañia</th>
+                                        <th>Importe</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="invoice_tbody">
+                                    <tr t-foreach="cjc.cjc_line" t-as="l">
+                                        <td>
+                                            <span t-field="l.fecha"/>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="l.comunicacion"/>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="l.referencia"/>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="l.partner_id"/>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="l.importe"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                                <tfoot>
+                                    <tr></tr>
+                                    <tr>
+                                        <td></td> <!-- Se deja en blanco para mover los datos a la derecha-->
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">
+                                            <b >Total sin Impuestos: </b>
+                                        </td>
+                                        <td>
+                                            <span t-field="cjc.total"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td> <!-- Se deja en blanco para mover los datos a la derecha-->
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">
+                                            <b>Monto Solicitado: </b>
+                                        </td>
+                                        <td>
+                                            <span t-field="cjc.monto_solicitado2"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td> <!-- Se deja en blanco para mover los datos a la derecha-->
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><b>= </b></td>
+                                        <td>
+                                            <b>
+                                                <span t-field="cjc.diferencia"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+
+                                </tfoot>
+
+                            </table>
+
+                            <div class="row">
+
+                                <h2>Informacion Adicional</h2>
+                                <div class="col-xs-6">
+                                    <p>
+                                        <b>Solicitado por: </b>
+                                        <span t-field="cjc.solicitado_por" />
+                                    </p>
+                                    <p>
+                                        <b>Validacion Encargado: </b>
+                                        <span t-field="cjc.validado1_por" />
+                                    </p>
+                                    <p>
+                                        <b>Aprobado por: </b>
+                                        <span t-field="cjc.aprobado_por" />
+                                    </p>
+                                    <p>
+                                        <b>Entregado por: </b>
+                                        <span t-field="cjc.entregado_por" />
+                                    </p>
+                                    <p>
+                                        <b>Recibido por: </b>
+                                        <span t-field="cjc.recibido_por" />
+                                    </p>
+                                </div>
+                                <div class="col-xs-6">
+                                    <p>
+                                        <b>Recibio Factura: </b>
+                                        <span t-field="cjc.rec_fact_por" />
+                                    </p>
+                                    <p>
+                                        <b>Validado por: </b>
+                                        <span t-field="cjc.validado_por" />
+                                    </p>
+                                    <p>
+                                        <b>Auditado por: </b>
+                                        <span t-field="cjc.auditado_por" />
+                                    </p>
+                                    <p>
+                                        <b>Completado por: </b>
+                                        <span t-field="cjc.completado_por" />
+                                    </p>
+                                    <p>
+                                        <b>Cancelado por: </b>
+                                        <span t-field="cjc.cancelado_por" />
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <h2>Notas</h2>
+                                <p><span t-field="cjc.notas" /></p>
+
+                            </div>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        
+    </data>
+</openerp>

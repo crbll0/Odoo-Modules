@@ -1,0 +1,29 @@
+<openerp>
+    <data>
+        <record id="account_view_bank_statement_form2_ext" model="ir.ui.view">
+            <field name="name">account bank statement form</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <button name="actualizar_monto" type="object" groups="" />
+                </xpath>
+                <xpath expr="//field[@name='line_ids']//field[@name='ref']" position="after">
+                    <field name="account_analytic_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--<record id="account_view_bank_statement_line_ext" model="ir.ui.view">-->
+            <!--<field name="name">account bank statement line</field>-->
+            <!--<field name="model">account.bank.statement</field>-->
+            <!--<field name="inherit_id" ref="account.view_bank_statement_form2"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="//field[@name='line_ids']//field[@name='ref']" position="after">-->
+                    <!--<field name="account_analytic_id" string="Cuenta Analitica"/>-->
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
+
+    </data>
+</openerp>

@@ -1,0 +1,64 @@
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_customer_receipt_form_ext">
+			<field name="name">account.voucher.receipt.form.ext</field>
+			<field name="model">account.voucher</field>
+			<field name="inherit_id" ref="account_voucher.view_vendor_payment_form"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<data>
+					<field name="state" position="replace">
+                         <field name="state" widget="statusbar"
+                                statusbar_visible="draft,validado,auditoria,financiero,ejecutar_pago,posted"
+                                statusbar_colors="{&quot;proforma&quot;:&quot;blue&quot;}"/>
+					</field>
+
+                    <field name="state" position="after">
+                         <field name="stage" widget="statusbar"
+                                statusbar_visible="draft,validado,auditoria,financiero"
+                                />
+					</field>
+
+					<button name="proforma_voucher" position="replace">
+						<button name="proforma_voucher" string="Validate" states="ejecutar_pago"
+								invisible="context.get('line_type', False)" class="oe_highlight"/>
+					</button>
+
+					<button name="proforma_voucher" position="after">
+						<button name="button_validado" type="object"
+								string="Confirmar"
+								attrs="{'invisible':[('state','!=','draft')]}"
+								groups=""/>
+
+						<button name="button_auditoria" type="object"
+								string="Confirmar Auditoria"
+								attrs="{'invisible':[('state','!=','validado')]}"
+								groups="__export__.res_groups_373"/>
+
+						<button name="button_financiero" type="object"
+								string="Confirmar Financiero"
+								attrs="{'invisible':[('state','!=','auditoria')]}"
+								groups="__export__.res_groups_91"/>
+
+						<button name="button_ejecutar_pago" type="object"
+								string="Ejecutar Pago"
+								attrs="{'invisible':[('state','!=','financiero')]}"
+								groups="__export__.res_groups_471"/>
+					</button>
+
+					<group string="Internal Notes" position="before">
+						<group colspan="4">
+							<field name="confirmado_por" />
+							<field name="auditoria_por" />
+							<field name="financiero_por" />
+							<field name="ejecutado_por" />
+							<field name="cancelado_por" />
+						</group>
+					</group>
+				</data>
+			</field>
+		</record>
+
+    </data>
+</openerp>

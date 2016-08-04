@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="ir_cron_set_tarifa_ventas" model="ir.cron">
+            <field name="name">Tarifa de Ventas - Empleados</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model">res.partner</field>
+            <field name="function">set_tarifa_venta</field>
+            <field name="args">()</field>
+        </record>
+
+        <record id="ir_cron_set_plazo_estudiante" model="ir.cron">
+            <field name="name">Plazo de Pago - Estudiantes</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model">res.partner</field>
+            <field name="function">set_plazo_estudiante</field>
+            <field name="args">()</field>
+        </record>
+
+        <record id="ir_cron_update_named" model="ir.cron">
+            <field name="name">Arreglar Nombres Productos y Activos</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model">account.asset.asset</field>
+            <field name="function">fix_name</field>
+            <field name="args">()</field>
+        </record>
+
+
+        <record id="ir_cron_update_respartner" model="ir.cron">
+            <field name="name">Actualizar Metodo de Pagos y cuentas en ResPartner</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model">res.partner</field>
+            <field name="function">several_sets</field>
+            <field name="args">()</field>
+        </record>
+
+        <!--<record id="ir_cron_update_antiguedad" model="ir.cron">-->
+            <!--<field name="name">Actualizar Antiguedad - Empleados</field>-->
+            <!--<field name="active" eval="True"/>-->
+            <!--<field name="interval_number">1</field>-->
+            <!--<field name="interval_type">days</field>-->
+            <!--<field name="numbercall">-1</field>-->
+            <!--<field name="doall" eval="False"/>-->
+            <!--<field name="model">res.partner</field>-->
+            <!--<field name="function">set_antiguedad_label</field>-->
+            <!--<field name="args">()</field>-->
+        <!--</record>-->
+
+    </data>
+</openerp>

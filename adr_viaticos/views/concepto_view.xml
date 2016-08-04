@@ -1,0 +1,106 @@
+<openerp>
+  <data>
+    <record model="ir.ui.view" id="conceptos_liest_view">
+      <field name="name">conceptos_liest_view</field>
+      <field name="model">viatico.conceptos</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <tree string="conceptos">
+          <field name="name"/>
+          <field name="categ_id"/>
+          <field name="tipo"/>
+          <field name="desayuno"/>
+          <field name="almuerzo"/>
+          <field name="cena"/>
+          <field name="alojamiento"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="conceptos_form_view">
+      <field name="name">conceptos_form_view</field>
+      <field name="model">viatico.conceptos</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Zona/Formulario">
+          <sheet>
+
+            <div>
+              <label for="name" string="Nombre de la Categoria" class="oe_edit_only" />
+              <field name="name" invisible="1"/>
+
+
+              <h1>
+                <field name="categ_id"/>
+              </h1>
+              <label string="Tipo"/><field name="tipo"/>
+
+            </div>
+
+            <group string="Montos y Conceptos">
+              <group>
+                <field name="desayuno"/>
+                <field name="almuerzo"/>
+                <field name="cena"/>
+              </group>
+              <group attrs="{'invisible': [('tipo', '=', 'dieta')]}">
+                <field name="alojamiento"/>
+                <field name="dia_completo"/>
+              </group>
+            </group>
+
+            <group attrs="{'invisible': [('tipo', '=', 'dieta')]}">
+              <field name="gasto_estraordinario"/>
+              <field name="gasto_impuesto"/>
+            </group>
+
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="search_view_viatico_rconcepto" model="ir.ui.view">
+    <field name="name">Search Conceptos Viaticos</field>
+    <field name="model">viatico.conceptos</field>
+    <field name="arch" type="xml">
+        <search string="Filtos">
+
+            <group string="Tipos">
+
+                <filter string="Viaticos" domain="[('tipo', '=', 'viatico')]"/>
+                <filter string="Dietas" domain="[('tipo', '=', 'dieta')]"/>
+            </group>
+
+            <group string="Agrupar por">
+
+                <filter string="Nombre"
+                        context="{'group_by': 'name'}"/>
+
+                <filter string="Categoria"
+                        context="{'group_by': 'categ_id'}"/>
+
+                <filter string="Tipos" context="{'group_by': ['tipo']}"/>
+
+            </group>
+
+        </search>
+    </field>
+    </record>
+
+
+
+    <record model="ir.actions.act_window" id="viatico_conceptos_view">
+      <field name="name">Viaticos/conceptos.</field>
+      <field name="res_model">viatico.conceptos</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Conceptos"
+              action="viatico_conceptos_view"
+              id="menu_de_viaticos_conceptos"
+              sequence="23"
+              parent="submenu_viaticos"/>
+
+  </data>
+</openerp>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="hr_holidays_status_form_extender" model="ir.ui.view">
+            <field name="name">hr holidays status form extender</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+            <field name="arch" type="xml">
+                <!-- Aqui van los campos para extender la vista-->
+                <xpath expr="//group[@name='second']" position="inside">
+
+                    <field name="dias"/>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

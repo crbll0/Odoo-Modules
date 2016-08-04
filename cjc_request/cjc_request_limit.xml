@@ -1,0 +1,57 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="cjc_request_caja_chica_limit_form">
+        <field name="name">Caja Chica Limite Form</field>
+        <field name="model">cjc_request.cjc_limit</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <!--<label string="Compañia" />-->
+                        <field name="company_id" />
+                    </group>
+
+                    <group>
+                        <!--<label string="Caja" />-->
+                        <field name="caja"
+                               domain="[('company_id', '=', company_id),
+                               ('is_cjc', '=', True)]"/>
+
+                        <!--<label string="Limite de Caja:" />-->
+                        <field name="limite" />
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+        </record>
+
+        <record model="ir.ui.view" id="cjc_request_caja_chica_limit_list" >
+        <field name="name">Limit Caja Chica List</field>
+        <field name="model">cjc_request.cjc_limit</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="company_id" />
+                <field name="caja" />
+                <field name="limite" />
+
+            </tree>
+        </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="view_cjc_request_limit_form">
+            <field name="name">Conf. Limite Caja Chica</field>
+            <field name="res_model">cjc_request.cjc_limit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--Para agregarlo al meno Contabilidad/Caja y Banco-->
+        <menuitem name="Conf. Limite Caja Chica" parent="account.menu_finance_configuration"
+                  action="view_cjc_request_limit_form"
+                  id="menu_caja_chica_limit" sequence="10" />
+    </data>
+</openerp>

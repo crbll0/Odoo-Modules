@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="deposit_ticket_form_ext2" model="ir.ui.view">
+            <field name="name">deposit.ticket.form.ext2</field>
+            <field name="model">deposit.ticket</field>
+            <field name="inherit_id" ref="npg_account_make_deposit.view_deposit_ticket_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//button[@name='action_review']" position="after">
+                    <button name="action_auditar" type="object" string="Auditado"
+                            states="to_be_reviewed"
+                            groups="__export__.res_groups_373"/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_process']" position="attributes">
+                    <attribute name="states">auditar</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='state']" position="replace">
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_be_reviewed,auditar,done"/>
+
+                </xpath>
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="stage" widget="statusbar"
+                           statusbar_visible="draft,to_be_reviewed,to_be_reviewed,auditar,done"/>
+
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="deposit_ticket_tree_ext2" model="ir.ui.view">
+            <field name="name">deposit.ticket.tree.ext2</field>
+            <field name="model">deposit.ticket</field>
+            <field name="inherit_id" ref="npg_account_make_deposit.view_deposit_ticket_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+
+                    <field name="stage"/>
+
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,16 @@
+<openerp>
+    <data>
+        <record id="mail_compose_message_inherit_ext_tag" model="ir.ui.view">
+            <field name="name">mail_compose_message_inherit_ext_tag</field>
+            <field name="model">mail.compose.message</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='subject']" position="after">
+
+                    <field name="tag" string="Tag"/>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
