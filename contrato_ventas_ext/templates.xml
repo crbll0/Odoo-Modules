@@ -1,0 +1,26 @@
+<openerp>
+    <data>
+
+        <record id="contrato_ventas_ext_view_form" model="ir.ui.view">
+            <field name="name">contrato_ventas_ext_view_form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <field name="manager_id" position="after">
+                    <field name="tipo" required="1"/>
+                </field>
+            </field>
+        </record>
+        
+        <record id="analytic_account_from_ext" model="ir.ui.view">
+            <field name="name">analytic_account_from_ext</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account_analytic_analysis.account_analytic_account_form_form"/>
+            <field name="arch" type="xml">
+                <button name="recurring_create_invoice" position="attributes">
+                    <attribute name="groups"></attribute>
+                </button>
+            </field>
+        </record>
+    </data>
+</openerp>
